@@ -3,14 +3,14 @@ import numpy as np
 
 
 SIGNAL_LOGIC = {
-    'regime':dict(label='趋势',long='趋势效率与 ADX 确认趋势，价格高于自适应中枢 + 0.45 ATR，短周期方向向上。',short='趋势效率与 ADX 确认趋势，价格低于自适应中枢 − 0.45 ATR，短周期方向向下。'),
+    'regime':dict(label='趋势',long='趋势效率达到阈值且 ADX ≥ 20，收盘高于自适应中枢 + 0.45 ATR；仅进入多头状态时触发。',short='趋势效率达到阈值且 ADX ≥ 20，收盘低于自适应中枢 − 0.45 ATR；仅进入空头状态时触发。'),
     'squeeze':dict(label='释放',long='近期出现波动挤压，当前解除压缩，价格在中轨上方，动量和放量确认向上。',short='近期出现波动挤压，当前解除压缩，价格在中轨下方，动量和放量确认向下。'),
     'flow':dict(label='资金',long='CMF、OBV 斜率和可用净流入方向共同偏多，价格站在 EMA34 上方。',short='CMF、OBV 斜率和可用净流入方向共同偏空，价格位于 EMA34 下方。'),
     'avwap':dict(label='成本',long='价格由负向成本偏离区回升，Z 值上穿负阈值且 RSI 回升。',short='价格由正向成本偏离区回落，Z 值下穿正阈值且 RSI 回落。'),
     'structure':dict(label='结构',long='突破此前已确认分形阻力 + 0.1 ATR，量比和 EMA20 三根斜率方向同时确认。',short='跌破此前已确认分形支撑 − 0.1 ATR，量比和 EMA20 三根斜率方向同时确认。'),
     'pullback':dict(label='回撤',long='长期趋势向上，在 ATR 容忍范围内回踩 EMA20 后重夺短周期线，RSI 回到 50 上方。',short='长期趋势向下，在 ATR 容忍范围内反抽 EMA20 后跌回短周期线，RSI 回到 50 下方。'),
     'mtf':dict(label='共振',long='日级方向、上一完整周方向、上一完整月方向同时向上。',short='日级方向、上一完整周方向、上一完整月方向同时向下。'),
-    'divergence':dict(label='背离',long='价格低点创新低但 RSI 低点抬升，缩量后上穿 EMA5，且 RSI 未超过修复上限。',short='价格高点创新高但 RSI 高点降低，缩量后下穿 EMA5，且 RSI 高于 100 减修复上限。'),
+    'divergence':dict(label='背离',long='两个右侧确认的价格低点下降，同日 RSI 抬升超过 3；随后收盘高于 EMA5 且 RSI 回升、低于修复上限。',short='两个右侧确认的价格高点上升，同日 RSI 下降超过 3；随后收盘低于 EMA5 且 RSI 回落、高于 100 减修复上限。'),
     'risk':dict(label='波控',long='20/60 日动量同时向上，价格高于长期线且超过 EMA20 + 0.25 × 缓冲系数 × ATR，波动处于预算范围。',short='20/60 日动量同时向下，价格低于长期线且低于 EMA20 − 0.25 × 缓冲系数 × ATR，波动处于预算范围。'),
     'ensemble':dict(label='评分',long='五因子评分上穿多头阈值，趋势因子高于中值。',short='五因子评分下穿空头阈值，趋势因子低于中值。'),
 }

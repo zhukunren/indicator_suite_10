@@ -83,3 +83,16 @@ def test_tuning_endpoint(client):
     assert result['after']['score']>=result['before']['score']
     assert client.post('/api/tune',json={'end':'2022-03-01'}).status_code==422
     assert client.post('/api/tune',json={'strategy':'not-a-strategy'}).status_code==422
+
+
+@pytest.mark.parametrize('strategy',['regime','squeeze','flow','avwap','structure','pullback','mtf','divergence','risk','ensemble'])
+def test_featured_studies_api_contract(client,strategy):
+    response=client.post('/api/analyze',json={'strategy':strategy})
+    assert response.status_code==200
+    data=response.json();study=data['study']
+    assert data['strategy']['featured'] is True
+    assert len(study['states'])==len(study['defense'])==len(data['bars'])
+    assert study['family']==('turn' if strategy in ('divergence','avwap') else 'trend')
+    assert 'NaN' not in response.text and 'Infinity' not in response.text
+    by_date={b['date']:b for b in data['bars']}
+    assert all(s['price']==by_date[s['date']]['close'] for s in data['signals'])

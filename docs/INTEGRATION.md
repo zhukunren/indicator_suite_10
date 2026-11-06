@@ -43,10 +43,16 @@
 - `bars[]`：`date/open/high/low/close/volume`，升序且日期唯一。
 - `overlays[]`：主图图层，包含 `name`、`values[]`、`color`、`kind`，以及可选 `dash`、`step`。
 - `panels[]`：副图，`kind` 为 `line`、`bar`、`stack` 或 `heatmap`。可选 `area` 表示面积填充。
-- `zones[]`：与日期对齐的 0/1 状态区间。含义随策略改变：趋势、压缩、资金、锚点、背离等，由策略定义解释。
-- `signals[]`：主图独立多空信号。含 `date/direction/kind/label/price/strength/atr/features/reason/index`。direction 为 long/short，kind 为 setup/continuation，price 是确认日收盘价；同方向可以连续出现，不强制配对。strength 是规则强度，不是概率。
+- `zones[]`：与日期对齐的状态区间。十套波段指标为 −1 / 0 / 1，新集成优先使用 `study.states`，其中预热为 null。
+- `signals[]`：主图独立多空信号。含 `date/direction/kind/label/price/strength/atr/features/reason/index`。direction 为 long/short，kind 为 setup/continuation，price 是确认日收盘价；全历史中买卖交替；截取区间可能从卖出开始。strength 是规则强度，不是概率。
+- `study`：十套波段指标的图表状态，当前十套均提供该字段。含 version=2、family（trend/turn）、subtitle、methodology、与 bars 对齐的 states / defense，current（state/since/bars/defense）、metrics 和 connectors。
+- `study.states[]`：1 多头 / 向上修复、−1 空头 / 向下修复、0 中性观察、null 预热。current 的持续根数和 since 限于请求区间。
+- `study.connectors[]`：背离结构连线，含 confirmed_at、direction、start/end（date/price/rsi）及 kind（divergence/swing）。仅在 confirmed_at 当日及以后展示；start/end 是历史极值位置，不能作为信号时间。起点在请求区间外的连线不输出。
+- 精选背离信号增加 pivot_date、confirmation_bars、invalidation；结构突破信号增加 structure_level。事件的 price 始终是确认日收盘。
+- `study.metrics`：趋势的 directional_bars / ready_bars / directional_pct / mean_run_bars / switches；拐点另含 evaluated / pending / median_confirmation_bars / mean_favorable_atr / mean_adverse_atr / invalidation_rate。方向覆盖不是准确率，状态段统计包含区间边界截断段。
+- `overlays[].role`：可选 state-line、band-upper、band-lower、defense，供原生客户端识别趋势带和防守图层。
 - `signal_stats`：5/10 根方向验证统计，含 long_count、short_count、continuations、evaluated、pending、hit_rate、mean_return_atr、whipsaw_rate。
-- `target[]`：当根收盘时辅助只做多回测的模型目标，0～1。它不限制主图多空信号，也不是成交。风险策略为动态入场仓位，其他策略为 0/1。
+- `target[]`：当根收盘时辅助只做多回测的模型目标，0～1。它来自同一波段状态；主图提示在收盘、辅助成交在次日开盘，二者时点不同。风险策略为动态入场仓位，其他策略为 0/1。
 - `backtest.trades[]`：真实模拟成交，含 `date/side/price/quantity/fee/signal_date/pnl/return_pct`；BUY 行的已实现盈亏为空。
 - `backtest.curve[]`：逐日 `equity/net_value/benchmark/drawdown/position`。
 - `backtest.metrics`：总收益、年化、回撤、Sharpe、胜率、费用、期末持股、浮动盈亏等。

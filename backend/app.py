@@ -16,6 +16,7 @@ from .strategies import CATALOG, BY_ID, compute, validate_params
 from .backtest import simulate
 from .tuning import tune, training_score
 from .signals import evaluate_signals
+from .studies import describe_study
 
 ROOT=Path(__file__).resolve().parents[1]
 app=FastAPI(title='东吴证券 · 策略研究工作台',version='2.0.0',description='AKShare 在线行情研究原型。因果指标计算、主副图输出、延迟执行回测。')
@@ -82,7 +83,8 @@ def run(req, prepared=None, compact=False):
     warnings.extend(['前复权基于当前复权口径，后续除权除息可能重算历史价格与信号；回放不是历史时点复权快照。','回测未模拟涨跌停封单、停牌补齐、流动性冲击、公司行动或逐笔成交；费用为可配置示例。'])
     signals=[s for s in result.signals if int(selected[0])<=s['index']<=int(selected[-1])]
     signal_stats={str(h):evaluate_signals(frame,signals,h) for h in (5,10)}
-    return clean(dict(data_meta=dict(full.attrs),signals=signals,signal_stats=signal_stats,symbol=req.symbol,name=market.name(req.symbol),strategy=BY_ID[req.strategy],params=validate_params(req.strategy,req.params),quote=dict(date=last.trade_date.strftime('%Y-%m-%d'),close=last.close,change=last.close-prior_close,change_pct=(last.close/prior_close-1)*100,open=last.open,high=last.high,low=last.low,volume=last.volume,amount=last.amount),bars=[dict(date=r.trade_date.strftime('%Y-%m-%d'),open=r.open,high=r.high,low=r.low,close=r.close,volume=r.volume) for r in frame.itertuples(index=False)],overlays=serialize(result.overlays),panels=serialize(result.panels),zones=result.zones.loc[selected].tolist(),target=target.tolist(),warnings=warnings,backtest=sim,range=dict(start=frame.iloc[0].trade_date.strftime('%Y-%m-%d'),end=last.trade_date.strftime('%Y-%m-%d'),bars=len(frame),warmup=int(selected[0])),request=req.model_dump(mode='json'),methodology=dict(execution='当根收盘计算，下一交易日开盘加滑点执行；区间初始空仓。',sizing='只做多，100 股整数手；每次入场设置仓位，持仓期间不再平衡。',fees='双边佣金，单笔最低 5 元；卖出额外税费；买卖分别计滑点。',benchmark='同区间首日开盘买入、末日收盘计值的标的价格收益，不计费用。',terminal='期末持仓按收盘计值，不强制平仓；胜率只统计已完成交易。',annual='按日历天折算年化（不足 30 天不显示），Sharpe 按 252 日、无风险收益 0 计算。')))
+    study=describe_study(result.study,full,selected,signals)
+    return clean(dict(study=study,data_meta=dict(full.attrs),signals=signals,signal_stats=signal_stats,symbol=req.symbol,name=market.name(req.symbol),strategy=BY_ID[req.strategy],params=validate_params(req.strategy,req.params),quote=dict(date=last.trade_date.strftime('%Y-%m-%d'),close=last.close,change=last.close-prior_close,change_pct=(last.close/prior_close-1)*100,open=last.open,high=last.high,low=last.low,volume=last.volume,amount=last.amount),bars=[dict(date=r.trade_date.strftime('%Y-%m-%d'),open=r.open,high=r.high,low=r.low,close=r.close,volume=r.volume) for r in frame.itertuples(index=False)],overlays=serialize(result.overlays),panels=serialize(result.panels),zones=result.zones.loc[selected].tolist(),target=target.tolist(),warnings=warnings,backtest=sim,range=dict(start=frame.iloc[0].trade_date.strftime('%Y-%m-%d'),end=last.trade_date.strftime('%Y-%m-%d'),bars=len(frame),warmup=int(selected[0])),request=req.model_dump(mode='json'),methodology=dict(execution='当根收盘计算，下一交易日开盘加滑点执行；区间初始空仓。',sizing='只做多，100 股整数手；每次入场设置仓位，持仓期间不再平衡。',fees='双边佣金，单笔最低 5 元；卖出额外税费；买卖分别计滑点。',benchmark='同区间首日开盘买入、末日收盘计值的标的价格收益，不计费用。',terminal='期末持仓按收盘计值，不强制平仓；胜率只统计已完成交易。',annual='按日历天折算年化（不足 30 天不显示），Sharpe 按 252 日、无风险收益 0 计算。')))
 
 
 @app.exception_handler(DataUnavailable)

@@ -3,14 +3,16 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>东吴证券 · 策略研究工作台</title>
-  <meta name="description" content="东吴证券项目展示原型：10 套复合策略、主副图联动与可解释回测。">
+  <meta name="description" content="东吴证券项目研究原型：10 套独立波段指标，独特主图、副图、信号符号与历史回放。">
   <link rel="icon" href="/assets/brand/soochow-favicon.png">
   <link rel="stylesheet" href="/assets/reference-tokens.css">
   <link rel="stylesheet" href="/assets/styles.css">
   <link rel="stylesheet" href="/assets/research-theme.css">
   <link rel="stylesheet" href="/assets/compact-workbench.css">
+  <link rel="stylesheet" href="/assets/studies.css?v=wave-3">
   <script src="/assets/vendor/echarts.min.js" defer></script>
-  <script src="/assets/app.js" defer></script>
+  <script src="/assets/studies.js?v=wave-3" defer></script>
+  <script src="/assets/app.js?v=wave-3" defer></script>
 </head>
 <body>
 <header class="topbar">
@@ -36,7 +38,7 @@
   </aside>
   <main>
     <section id="workspaceView" class="view">
-      <div class="page-heading workspace-heading"><h1>策略行情</h1><div class="workspace-actions"><select id="strategySelect" aria-label="选择研究策略"></select><button class="button primary" id="tuneBtn" title="覆盖参数允许的完整范围，先粗搜再精调"><span data-icon="spark"></span><span id="tuneButtonLabel">一键调参</span></button><button class="button" id="openDrawer"><span data-icon="settings"></span>参数设置</button><button class="icon-button" id="compareBtn" title="10 策略对比" aria-label="10 策略对比" data-icon="layers"></button><button class="icon-button" id="presetsBtn" title="研究方案" aria-label="研究方案" data-icon="bookmark"></button></div></div><div id="tuneSummary" class="tune-summary" hidden></div>
+      <div class="page-heading workspace-heading"><h1>波段指标演示</h1><div class="workspace-actions"><select id="strategySelect" aria-label="选择研究策略"></select><button class="button primary" id="tuneBtn" title="覆盖参数允许的完整范围，先粗搜再精调"><span data-icon="spark"></span><span id="tuneButtonLabel">一键调参</span></button><button class="button" id="openDrawer"><span data-icon="settings"></span>参数设置</button><button class="icon-button" id="compareBtn" title="10 策略对比" aria-label="10 策略对比" data-icon="layers"></button><button class="icon-button" id="presetsBtn" title="研究方案" aria-label="研究方案" data-icon="bookmark"></button></div></div><div id="tuneSummary" class="tune-summary" hidden></div>
       <div id="errorBanner" class="error-banner" role="alert" hidden></div>
       <div class="research-layout">
         <div class="center-column">
@@ -46,9 +48,11 @@
           </section>
           <section class="card chart-card">
             <div class="chart-toolbar"><div class="period-group"><button class="selected" title="源数据为日线">日 K</button><span class="separator"></span><button data-range="6m">近半年</button><button data-range="1y">近一年</button><button class="selected" data-range="2y">近两年</button><button data-range="3y">近三年</button></div><div class="chart-tools"><button class="trade-focus-button" id="focusSignals" title="定位最近多空信号">最近信号</button><button class="icon-button" id="replayBtn" title="历史逐日回放" aria-label="历史逐日回放" data-icon="play"></button><button class="icon-button" id="resetChart" title="重置图表缩放" aria-label="重置图表缩放" data-icon="expand"></button><button class="icon-button" id="screenshotBtn" title="导出图表 PNG" aria-label="导出图表 PNG" data-icon="camera"></button><button class="icon-button" id="embedBtn" title="嵌入与分享" aria-label="嵌入与分享" data-icon="code"></button></div></div>
-            <div class="chart-strategy-label"><span class="strategy-dot" id="strategyDot"></span><b id="chartStrategyName">自适应市场状态</b><span id="visualLabel">状态色带 × 自适应通道</span><span class="price-basis">前复权 · AKShare</span></div>
+            <div id="studyShortcuts" class="study-shortcuts" aria-label="精选指标切换" hidden></div>
+            <div id="studySummary" class="study-summary" hidden></div>
+            <div class="chart-strategy-label"><span class="strategy-dot" id="strategyDot"></span><b id="chartStrategyName">趋势波段带</b><span id="waveStatus" class="wave-status" hidden></span><span id="visualLabel">连续趋势带 × 方向强度</span><button id="toggleAnnotations" class="annotation-toggle" aria-pressed="false" hidden>详细标注</button><span class="price-basis">前复权 · AKShare</span></div>
             <div id="chartLegend" class="chart-legend"></div>
-            <div class="chart-wrap"><div id="marketChart" role="img" aria-label="行情 K 线、成交量与策略副图"></div><div id="chartLoading" class="loading-overlay"><span class="spinner"></span><b>正在计算复合策略</b><small>读取真实行情与历史信号</small></div></div>
+            <div class="chart-wrap"><div id="marketChart" role="img" aria-label="行情 K 线、成交量与策略副图"></div><div id="chartLoading" class="loading-overlay"><span class="spinner"></span><b>正在计算波段指标</b><small>读取真实行情与历史信号</small></div></div>
             <div class="chart-footer"><span class="signal-guide"><b class="buy-label">多头</b><b class="sell-label">空头</b><span>收盘确认 · 同方向可连续触发</span></span><span id="barCount">滚轮缩放 · 拖动平移</span></div><div id="signalStrip" class="signal-strip"></div><div id="signalMetrics" class="signal-metrics"></div>
             <div class="replay-toolbar" id="replayToolbar" hidden><span data-icon="history"></span><span>历史回放</span><input id="replaySlider" type="range" min="1" max="100" value="100" aria-label="历史回放日期"><b id="replayDate"></b><button class="button small" id="replayNext">下一日</button><button class="text-button" id="replayExit">退出</button></div>
           </section>
@@ -65,7 +69,7 @@
 
       </div>
     </section>
-    <section id="libraryView" class="view active"><div class="page-heading"><div><div class="eyebrow">策略与指标 / 方案库</div><h1>复合策略图谱</h1><p>10 种研究逻辑，各自独立的主图与副图表达。</p></div><span class="library-count">10 <small>STRATEGIES</small></span></div><div class="library-notice"><span data-icon="info"></span>下方缩略图为视觉概念示意。点击任意策略卡片，即可加载对应的策略行情。</div><div id="strategyLibrary" class="library-grid"></div></section>
+    <section id="libraryView" class="view active"><div class="page-heading atlas-heading"><div><div class="eyebrow">SOOCHOW RESEARCH / 波段指标图谱</div><h1>十种视角，看见行情波段。</h1><p>趋势、量价、成本与拐点，各自独立的图形与信号表达。</p></div><div class="atlas-edition"><b>10</b><span>波段研究指标<br>主图 · 副图 · 独特符号</span></div></div><div class="atlas-section-heading"><div><span class="section-index">INDICATORS</span><h2>选择一个观察视角</h2></div><span class="concept-note">缩略图为概念示意 · 点击查看真实行情</span></div><div id="featuredStudies" hidden></div><div id="strategyLibrary" class="library-grid atlas-collection"></div><div class="atlas-footnote"><span>真实行情 · 收盘确认 · 支持历史回放</span><span>历史研究与演示，不代表未来表现</span></div></section>
     <section id="researchView" class="view"><div class="page-heading"><div><div class="eyebrow">策略与指标 / 方法说明</div><h1>研究方法与数据口径</h1><p>策略逻辑、执行假设与数据边界。</p></div><span class="prototype">研究原型 · 非官方交易终端</span></div><div id="researchContent"></div></section>
     <footer class="app-footer"><span>东吴证券项目 · 策略研究工作台</span><span>RESEARCH PROTOTYPE <i></i> 仅供研究与演示</span></footer>
   </main>
@@ -74,10 +78,10 @@
           <section class="card strategy-config">
             <div class="strategy-intro" id="strategyIntro"></div>
             <div class="config-section"><div class="config-title"><h3>策略参数</h3><button class="text-button" id="resetParams">恢复默认</button></div><div id="paramsForm"></div></div>
-            <div class="config-section"><div class="config-title"><h3>研究区间</h3><span>日线 · 多空独立</span></div><div class="date-fields"><label>开始日期<input id="startDate" type="date" aria-label="回测开始日期"></label><label>结束日期<input id="endDate" type="date" aria-label="回测结束日期"></label></div><details class="aux-settings"><summary>辅助回测设置</summary><label class="number-field"><span>初始资金 <small>元</small></span><input type="number" id="capital" value="1000000" min="10000" max="10000000000" step="10000"></label><label class="number-field"><span>仓位上限 <small>%</small></span><input type="number" id="allocation" value="100" min="10" max="100" step="10"></label><details class="cost-details"><summary>交易费用与滑点 <span>可配置</span></summary><label class="number-field"><span>双边佣金 <small>bp</small></span><input type="number" id="commission" value="3" min="0" max="100" step="0.5"></label><label class="number-field"><span>卖出税费 <small>bp</small></span><input type="number" id="tax" value="5" min="0" max="100" step="0.5"></label><label class="number-field"><span>单边滑点 <small>bp</small></span><input type="number" id="slippage" value="2" min="0" max="100" step="0.5"></label><p>1 bp = 0.01% · 单笔佣金最低 5 元<br>以上为演示假设，可按实际口径调整。</p></details></details></div>
+            <div class="config-section"><div class="config-title"><h3>研究区间</h3><span>日线 · 波段买卖</span></div><div class="date-fields"><label>开始日期<input id="startDate" type="date" aria-label="回测开始日期"></label><label>结束日期<input id="endDate" type="date" aria-label="回测结束日期"></label></div><details class="aux-settings"><summary>辅助回测设置</summary><label class="number-field"><span>初始资金 <small>元</small></span><input type="number" id="capital" value="1000000" min="10000" max="10000000000" step="10000"></label><label class="number-field"><span>仓位上限 <small>%</small></span><input type="number" id="allocation" value="100" min="10" max="100" step="10"></label><details class="cost-details"><summary>交易费用与滑点 <span>可配置</span></summary><label class="number-field"><span>双边佣金 <small>bp</small></span><input type="number" id="commission" value="3" min="0" max="100" step="0.5"></label><label class="number-field"><span>卖出税费 <small>bp</small></span><input type="number" id="tax" value="5" min="0" max="100" step="0.5"></label><label class="number-field"><span>单边滑点 <small>bp</small></span><input type="number" id="slippage" value="2" min="0" max="100" step="0.5"></label><p>1 bp = 0.01% · 单笔佣金最低 5 元<br>以上为演示假设，可按实际口径调整。</p></details></details></div>
             <button class="button primary run-button" id="runBtn"><span data-icon="play"></span>应用参数</button><button class="text-button save-config" id="savePreset"><span data-icon="bookmark"></span>保存当前研究方案</button>
           </section>
-          <details class="drawer-explanation"><summary>多空信号说明</summary><section class="card insight-card"><div class="insight-header"><span data-icon="spark"></span><h3>为什么出现这个信号</h3></div><div id="latestSignal"></div><button id="explainBtn" class="text-button">查看完整逻辑 <span>→</span></button></section></details>
+          <details class="drawer-explanation"><summary>买卖信号说明</summary><section class="card insight-card"><div class="insight-header"><span data-icon="spark"></span><h3>为什么出现这个信号</h3></div><div id="latestSignal"></div><button id="explainBtn" class="text-button">查看完整逻辑 <span>→</span></button></section></details>
           <div class="integration-note"><span data-icon="code"></span><div><b>为行情系统集成而设计</b><p>独立图层输出 · 参数化策略 · 标准 API</p><a href="/docs" target="_blank" rel="noopener">查看接口文档 ↗</a></div></div>
         </aside>
 </dialog>
