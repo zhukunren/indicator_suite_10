@@ -1,0 +1,129 @@
+/**
+ * tokens.css - Design Tokens for LLM Research Platform
+ * Shared neutral surfaces with semantic colors reserved for research data.
+ */
+:root {
+  --ui-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei UI", sans-serif;
+  --ui-font-mono: "Cascadia Mono", Consolas, "SFMono-Regular", Menlo, monospace;
+  --ui-reading-size: 15px;
+  --ui-reading-leading: 1.75;
+  --ui-reading-width: 820px;
+  --ui-entry-width: 760px;
+  --ui-tool-gutter: 28px;
+  --ui-tool-gap: 24px;
+  --ui-tool-control: 36px;
+  --ui-tool-radius: 12px;
+
+  color-scheme: light;
+
+  /* Surfaces & Canvas - warmer neutrals with better layering */
+  --ui-canvas: #fcfcfc;
+  --ui-surface: #ffffff;
+  --ui-surface-subtle: #f9fafb;
+  --ui-surface-hover: #f3f4f6;
+  --ui-surface-active: #e8eaed;
+
+  /* Typography Colors - refined contrast */
+  --ui-text: #1a1a1a;
+  --ui-text-muted: #5a5a5a;
+  --ui-text-faint: #737373;
+  --ui-text-disabled: #a3a3a3;
+
+  /* Borders & Dividers - softer hierarchy */
+  --ui-border: #e8eaed;
+  --ui-border-subtle: #f0f2f5;
+  --ui-border-strong: #c7cbd1;
+
+  /* Refined Soochow blues - warmer and more modern while staying professional */
+  --ui-brand: #004a99;
+  --ui-brand-navy: var(--ui-brand);
+  --ui-accent: #0079c2;
+  --ui-primary: #004a99;
+  --ui-primary-hover: #005bb5;
+  --ui-primary-active: #003d7a;
+  --ui-primary-soft: #e8f2fb;
+  --ui-primary-border: #bed5ed;
+  --ui-on-primary: #ffffff;
+  --ui-chart-line: #32839b;
+  --ui-chart-area: rgba(50, 131, 155, 0.09);
+
+  /* A-Share Market Colors (Red Up, Green Down) */
+  --ui-market-up: #be414a;
+  --ui-market-up-soft: #faeff0;
+  --ui-market-up-border: #f5c4c8;
+  --ui-market-down: #208575;
+  --ui-market-down-soft: #edf6f3;
+  --ui-market-down-border: #bfe5dc;
+
+  /* Semantic Feedback Colors */
+  --ui-success: #267d6c;
+  --ui-success-soft: #edf6f2;
+  --ui-success-border: #c5dfd7;
+  --ui-warning: #98703b;
+  --ui-warning-soft: #faf5ec;
+  --ui-warning-border: #e3d5bc;
+  --ui-danger: #b42318;
+  --ui-danger-soft: #faecea;
+  --ui-danger-border: #efc3c5;
+
+  /* Sidebar Tokens - cleaner and lighter */
+  --ui-sidebar-width: 240px;
+  --ui-sidebar: #fafbfc;
+  --ui-sidebar-border: #e8ecf1;
+  --ui-sidebar-text: #2d3748;
+  --ui-sidebar-muted: #6b7280;
+  --ui-sidebar-hover: #f1f3f6;
+  --ui-sidebar-active: #e6f0fa;
+
+  /* Corner Radii - refined for modern feel */
+  --ui-radius-xs: 8px;
+  --ui-radius-sm: 10px;
+  --ui-radius-md: 12px;
+  --ui-radius-lg: 16px;
+  --ui-radius-pill: 999px;
+  --ui-radius-composer: 20px;
+
+  /* Shadows */
+  --ui-shadow-sm: 0 1px 2px rgba(25, 52, 80, 0.025);
+  --ui-shadow-composer: 0 2px 8px rgba(25, 52, 80, 0.035);
+  --ui-composer-border: #d8dfe8;
+  --ui-shadow-panel: none;
+  --ui-shadow-raised: 0 8px 30px rgba(25, 52, 80, 0.09);
+  --ui-shadow-overlay: 0 20px 65px rgba(27, 57, 83, 0.18);
+  --ui-overlay-backdrop: rgba(23, 43, 62, 0.36);
+
+  /* Focus & Controls */
+  --ui-focus-outline: #0079c2;
+  --ui-focus-shadow: 0 0 0 3px rgba(0, 121, 194, 0.12);
+  --ui-disabled-surface: #f4f6f8;
+  --ui-disabled-border: #e1e5eb;
+  --ui-disabled-ink: #7d8794;
+  --ui-disabled-primary: #e9eff7;
+  --ui-disabled-primary-ink: #7a8fae;
+  --ui-control-sm: 30px;
+  --ui-control-md: 40px;
+  --ui-control-lg: 40px;
+  --ui-header-height: 60px;
+  --ui-transition: 150ms ease;
+
+  /* Backward Compatibility Aliases */
+  --brand-navy: var(--ui-brand-navy);
+  --brand-blue: var(--ui-primary);
+  --ink: var(--ui-text);
+  --muted: var(--ui-text-muted);
+  --line: var(--ui-border);
+  --panel: var(--ui-surface);
+  --canvas: var(--ui-canvas);
+  --accent: var(--ui-primary);
+  --accent-light: var(--ui-primary-soft);
+  --accent-border: var(--ui-primary-border);
+  --green: var(--ui-success);
+  --green-bg: var(--ui-success-soft);
+  --red: var(--ui-danger);
+  --red-bg: var(--ui-danger-soft);
+  --amber: var(--ui-warning);
+  --amber-bg: var(--ui-warning-soft);
+
+  font-family: var(--ui-font-sans);
+  letter-spacing: 0;
+}

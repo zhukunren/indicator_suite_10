@@ -123,5 +123,4 @@ npm.cmd run check
 单次调参复用 ATR、RSI、均线、高周期方向、窗口特征及日期索引；训练与验证使用不同 FeatureContext。搜索阶段仅计算信号，不重复构建图层或辅助持仓状态。五因子主图的滚动回归改用 NumPy 相关运算。详细实测见 [性能验证](docs/PERFORMANCE.md)。
 
 本机复现当前引擎的 CPU 基准：`.\.venv\Scripts\python.exe scripts/benchmark_engine.py`。它生成固定随机日线，排除 AKShare 网络延迟。
-#   i n d i c a t o r _ s u i t e _ 1 0  
- 
+# indicator_suite_10

@@ -1,0 +1,7 @@
+{
+  "name": "dongwu-strategy-studio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {"vendor": "node scripts/vendor.mjs", "check": "node --check frontend/app.js"},
+  "dependencies": {"echarts": "5.6.0"}
+}
